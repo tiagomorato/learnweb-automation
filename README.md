@@ -1,13 +1,12 @@
-**LearnWeb Automation**
+# LearnWeb Automation
+An automation for checking updates of LearnWeb courses at the University of Hildesheim. The script logs into LearnWeb, scrapes activity names from course pages, stores snapshots, and prints differences between the last two snapshots for each course.
 
-- **Description:** An automation for checking updates of LearnWeb courses at the University of Hildesheim. The script logs into LearnWeb, scrapes activity names from course pages, stores snapshots, and prints differences between the last two snapshots for each course.
-
-**Requirements**
+## Requirements
 - **Python packages**: `selenium`, `python-dotenv`.
 - **System dependencies**: A recent Chrome/Chromium browser and a matching `chromedriver` available on your `PATH` (or installed to a location that `webdriver.Chrome()` can find).
   - download it using `pip install webdriver-manager`
 
-**Requirements Installation from `pyproject.toml`**
+### Requirements Installation from `pyproject.toml`
 - Create and activate a virtual environment:
 
 ```bash
@@ -21,7 +20,7 @@ python -m pip install --upgrade pip setuptools wheel
 pip install .
 ```
 
-**Configuration**
+### Configuration
 - Create a `.env` file in the project root with these entries:
 
 ```
@@ -45,7 +44,7 @@ PASSWORD=your_learnweb_password
   - set `LOGIN_URL` to the login page for the **current semester** and 
   - set the `SEMESTER` constant inside `learnweb_automation.py` to match the semester key used in `course.json`.
 
-**Usage**
+## Usage
 - Ensure the `file` directory exists in the project root (the script writes snapshots there):
 
 ```bash
@@ -63,7 +62,10 @@ python learnweb_automation.py
   - Visits each course URL, extracts activity names, and writes a timestamped `.txt` snapshot to `file`.
   - Compares the two most recent snapshots per course and prints any differences.
 
-**Notes & Troubleshooting**
+### Output example
+![Output example of the LearnWeb automation script](example1.png)
+
+## Notes & Troubleshooting
 - If you get driver-related errors, ensure `chromedriver` matches your Chrome/Chromium version. You can download `chromedriver` from the official site and place it on your `PATH` or use a manager such as `webdriver-manager` (not required by the script).
 - If the script fails when writing files, ensure `file` exists and is writable.
 - If login fails, verify `.env` values and that `LOGIN_URL` is correct for the semester.
