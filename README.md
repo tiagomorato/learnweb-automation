@@ -35,7 +35,7 @@ PASSWORD=your_learnweb_password
         "LOGIN_URL": "https://www.uni-hildesheim.de/learnweb2025/login/index.php",
         "Course1": "https://www.uni-hildesheim.de/learnweb2025/course/view.php?id=45",
         "Course2": "https://www.uni-hildesheim.de/learnweb2025/course/view.php?id=47",
-        "Course3": "https://www.uni-hildesheim.de/learnweb2025/course/view.php?id=46",
+        "Course3": "https://www.uni-hildesheim.de/learnweb2025/course/view.php?id=46"
     }
 }
 ```
