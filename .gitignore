@@ -4,3 +4,6 @@ venv/
 __pycache__/
 *.pyc
 course.json
+build/
+*.egg-info
+file/
