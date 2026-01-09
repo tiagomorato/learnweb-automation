@@ -2,6 +2,7 @@ import os
 import json
 import difflib
 from datetime import datetime
+from typing import List
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -41,7 +42,7 @@ def login(driver, login_url):
         print(f"Login failed: {e}")
         raise
 
-def extract_activity_name(driver) -> None:
+def extract_activity_name(driver) -> List[str]:
     activity_names = []
     
     try:
@@ -145,20 +146,23 @@ if __name__ == "__main__":
     for course_name, url in course_data.items():
         spacing = (longest - len(course_name)) * ' '
         print(f"[{course_name}]", end="")
-        driver.get(url)
+        try:
+            driver.get(url)
 
-        activity_name = extract_activity_name(driver=driver) 
-        write_to_file(activity_name, course_name)
+            activity_name = extract_activity_name(driver=driver)
+            write_to_file(activity_name, course_name)
 
-        current, previous = get_last_saved_files(course_name, spacing)
-        if not previous: 
+            current, previous = get_last_saved_files(course_name, spacing)
+            if not previous:
+                continue
+
+            if are_files_identical(current, previous):
+                print(f"{spacing}\tNo changes detected.")
+            else:
+                print(f"{spacing}\tChanges detected")
+                print_file_difference(current, previous)
+        except Exception as e:
+            print(f"{spacing}\tERROR processing {course_name}: {e}")
             continue
-
-
-        if are_files_identical(current, previous):
-            print(f"{spacing}\tNo changes detected.")
-        else:
-            print(f"{spacing}\tChanges detected")
-            print_file_difference(current, previous)
 
     driver.quit()
