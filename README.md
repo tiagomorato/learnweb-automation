@@ -64,8 +64,3 @@ python learnweb_automation.py
 
 ### Output example
 ![Output example of the LearnWeb automation script](example1.png)
-
-## Notes & Troubleshooting
-- If you get driver-related errors, ensure `chromedriver` matches your Chrome/Chromium version. You can download `chromedriver` from the official site and place it on your `PATH` or use a manager such as `webdriver-manager` (not required by the script).
-- If the script fails when writing files, ensure `file` exists and is writable.
-- If login fails, verify `.env` values and that `LOGIN_URL` is correct for the semester.
