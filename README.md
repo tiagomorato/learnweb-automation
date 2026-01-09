@@ -45,11 +45,6 @@ PASSWORD=your_learnweb_password
   - set the `SEMESTER` constant inside `learnweb_automation.py` to match the semester key used in `course.json`.
 
 ## Usage
-- Ensure the `file` directory exists in the project root (the script writes snapshots there):
-
-```bash
-mkdir file
-```
 - Run the script:
 
 ```bash

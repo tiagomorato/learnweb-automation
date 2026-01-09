@@ -1,6 +1,7 @@
 import os
 import json
 import difflib
+import logging
 from datetime import datetime
 from typing import List
 from dotenv import load_dotenv
@@ -12,6 +13,21 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
 
 load_dotenv()
+
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+LOG_DIR = os.getenv("LOG_DIR", "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
+LOG_FILENAME = os.path.join(LOG_DIR, f"learnweb_{LOG_TIMESTAMP}.log")
+
+logging.basicConfig(
+    level=LOG_LEVEL,
+    format="%(asctime)s %(levelname)s %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler(LOG_FILENAME, encoding="utf-8"),
+    ],
+)
 
 def driver_wait_until(by, input_name):
     return WebDriverWait(driver, 10).until(
@@ -37,9 +53,9 @@ def login(driver, login_url):
 
         driver_wait_until(By.TAG_NAME, "h1")
 
-        print("Logged in successfully.")
+        logging.info("Logged in successfully.")
     except Exception as e:
-        print(f"Login failed: {e}")
+        logging.exception("Login failed")
         raise
 
 def extract_activity_name(driver) -> List[str]:
@@ -65,7 +81,7 @@ def extract_activity_name(driver) -> List[str]:
         return activity_names
 
     except Exception as e:
-        print(f"Failed to save activity names: {e}")
+        logging.exception("Failed to save activity names")
         raise
 
 def write_to_file(activity_names, course_name, output_dir="file") -> None:
@@ -80,7 +96,7 @@ def write_to_file(activity_names, course_name, output_dir="file") -> None:
                 file.write(f"{activity_name}\n")    
         
     except Exception as e:
-        print("Error writing to file:", e)
+        logging.exception("Error writing to file")
         raise
 
 def are_files_identical(current, previous) -> bool:
@@ -89,7 +105,7 @@ def are_files_identical(current, previous) -> bool:
         with open(current, 'r') as f1, open(previous, 'r') as f2:
             return f1.read() == f2.read()
     except Exception as e:
-        print("File comparison failed:", e)
+        logging.exception("File comparison failed")
         raise
     
 def print_file_difference(current_path, previous_path) -> None:
@@ -106,9 +122,9 @@ def print_file_difference(current_path, previous_path) -> None:
 
     for line in diff:
         if line.startswith("+") and not line.startswith("+++"):
-            print("\t" + line.strip())
+            logging.info("\t" + line.strip())
         elif line.startswith("-") and not line.startswith("---"):
-            print("\t" + line.strip())
+            logging.info("\t" + line.strip())
 
 def get_last_saved_files(course_name, spacing, output_dir="file"):
     files = sorted([f for f in os.listdir(output_dir) 
@@ -117,7 +133,7 @@ def get_last_saved_files(course_name, spacing, output_dir="file"):
     if len(files) >= 2:
         return os.path.join(output_dir, files[0]), os.path.join(output_dir, files[1])
     elif len(files) == 1:
-        print(f"{spacing}\tWARNING: get_last_saved_files has only 1 file.")
+        logging.warning(f"{spacing}\tWARNING: get_last_saved_files has only 1 file.")
         return os.path.join(output_dir, files[0]), None
     else:
         return None, None
@@ -127,7 +143,7 @@ def load_config(path):
         with open(path, 'r') as f:
             return json.load(f)[SEMESTER]
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        #TODO logger.error(f"Config loading failed: {str(e)}")
+        logging.error(f"Config loading failed: {str(e)}")
         raise
 
 if __name__ == "__main__":
@@ -147,7 +163,7 @@ if __name__ == "__main__":
 
     for course_name, url in course_data.items():
         spacing = (longest - len(course_name)) * ' '
-        print(f"[{course_name}]", end="")
+        logging.info(f"[{course_name}]")
         try:
             driver.get(url)
 
@@ -159,12 +175,12 @@ if __name__ == "__main__":
                 continue
 
             if are_files_identical(current, previous):
-                print(f"{spacing}\tNo changes detected.")
+                logging.info(f"No changes detected.")
             else:
-                print(f"{spacing}\tChanges detected")
+                logging.info(f"Changes detected")
                 print_file_difference(current, previous)
         except Exception as e:
-            print(f"{spacing}\tERROR processing {course_name}: {e}")
+            logging.exception(f"ERROR processing {course_name}: {e}")
             continue
 
     driver.quit()
