@@ -69,6 +69,8 @@ def extract_activity_name(driver) -> List[str]:
         raise
 
 def write_to_file(activity_names, course_name, output_dir="file") -> None:
+    os.makedirs(output_dir, exist_ok=True)
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = os.path.join(output_dir, f"{course_name}_{timestamp}.txt")
 
