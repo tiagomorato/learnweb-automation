@@ -7,3 +7,4 @@ course.json
 build/
 *.egg-info
 file/
+logs/

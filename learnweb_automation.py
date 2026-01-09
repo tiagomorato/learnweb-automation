@@ -1,6 +1,7 @@
 import os
 import json
 import difflib
+import logging
 from datetime import datetime
 from typing import List
 from dotenv import load_dotenv
@@ -13,10 +14,20 @@ from selenium.common.exceptions import NoSuchElementException
 
 load_dotenv()
 
-import logging
-
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
-logging.basicConfig(level=LOG_LEVEL, format="%(asctime)s %(levelname)s %(message)s")
+LOG_DIR = os.getenv("LOG_DIR", "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
+LOG_FILENAME = os.path.join(LOG_DIR, f"learnweb_{LOG_TIMESTAMP}.log")
+
+logging.basicConfig(
+    level=LOG_LEVEL,
+    format="%(asctime)s %(levelname)s %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler(LOG_FILENAME, encoding="utf-8"),
+    ],
+)
 
 def driver_wait_until(by, input_name):
     return WebDriverWait(driver, 10).until(
@@ -164,12 +175,12 @@ if __name__ == "__main__":
                 continue
 
             if are_files_identical(current, previous):
-                logging.info(f"{spacing}\tNo changes detected.")
+                logging.info(f"No changes detected.")
             else:
-                logging.info(f"{spacing}\tChanges detected")
+                logging.info(f"Changes detected")
                 print_file_difference(current, previous)
         except Exception as e:
-            logging.exception(f"{spacing}\tERROR processing {course_name}: {e}")
+            logging.exception(f"ERROR processing {course_name}: {e}")
             continue
 
     driver.quit()
