@@ -10,6 +10,7 @@ An automation for checking updates of LearnWeb courses at the University of Hild
 - Clone the repository:
 ```bash
 git clone https://github.com/tiagomorato/learnweb-automation.git
+cd learnweb-automation
 ```
 
 - Create and activate a virtual environment:
