@@ -6,7 +6,13 @@ An automation for checking updates of LearnWeb courses at the University of Hild
 - **System dependencies**: A recent Chrome/Chromium browser and a matching `chromedriver` available on your `PATH` (or installed to a location that `webdriver.Chrome()` can find).
   - download it using `pip install webdriver-manager`
 
-### Requirements Installation from `pyproject.toml`
+### Installation
+- Clone the repository:
+```bash
+git clone https://github.com/tiagomorato/learnweb-automation.git
+cd learnweb-automation
+```
+
 - Create and activate a virtual environment:
 
 ```bash
@@ -59,8 +65,3 @@ python learnweb_automation.py
 
 ### Output example
 ![Output example of the LearnWeb automation script](example1.png)
-
-## Notes & Troubleshooting
-- If you get driver-related errors, ensure `chromedriver` matches your Chrome/Chromium version. You can download `chromedriver` from the official site and place it on your `PATH` or use a manager such as `webdriver-manager` (not required by the script).
-- If the script fails when writing files, ensure `file` exists and is writable.
-- If login fails, verify `.env` values and that `LOGIN_URL` is correct for the semester.
