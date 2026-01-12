@@ -57,11 +57,15 @@ PASSWORD=your_learnweb_password
 python learnweb_automation.py
 ```
 
+or to automatically activate the venv and run the script:
+```bash
+cd learnweb-automation
+bash run.sh
+```
+
 - What the script does:
   - Loads `.env` (expects `LOGIN` and `PASSWORD`).
   - Loads `course.json` for the configured semester and pops `LOGIN_URL` to perform login.
   - Visits each course URL, extracts activity names, and writes a timestamped `.txt` snapshot to `file`.
   - Compares the two most recent snapshots per course and prints any differences.
 
-### Output example
-![Output example of the LearnWeb automation script](example1.png)
